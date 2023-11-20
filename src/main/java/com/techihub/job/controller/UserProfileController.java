@@ -1,16 +1,19 @@
 package com.techihub.job.controller;
 
-import com.techihub.job.model.Experience;
+import com.techihub.job.model.Feedback;
 import com.techihub.job.model.UserProfile;
 import com.techihub.job.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Map;
+
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestController
 @RequestMapping("/api/user-profile")
@@ -18,31 +21,50 @@ import java.io.IOException;
 public class UserProfileController {
     private final UserProfileService userProfileService;
 
-    @GetMapping("/{id}")
-    @Secured("ROLE_USER")
-    public ResponseEntity<UserProfile> getUserProfile(@PathVariable String userID) {
+    @GetMapping("/{userID}")
+    public ResponseEntity<Feedback> getUserProfile(@PathVariable String userID) {
         UserProfile userProfile = userProfileService.getByUserID(userID);
+        Feedback feedback = Feedback.builder().timeStamp(LocalDateTime.now()).build();
+
         if (userProfile != null) {
-            return ResponseEntity.ok(userProfile);
+            feedback.setStatus(HttpStatus.OK);
+            feedback.setStatusCode(HttpStatus.OK.value());
+            feedback.setMessage("User profile found");
+            feedback.setData(Map.of("userProfile", userProfile));
         } else {
-            return ResponseEntity.notFound().build();
+            feedback.setStatus(HttpStatus.NOT_FOUND);
+            feedback.setStatusCode(HttpStatus.NOT_FOUND.value());
+            feedback.setMessage("User profile not found");
         }
+
+        return ResponseEntity.status(feedback.getStatus()).body(feedback);
     }
+
+
 
     @GetMapping("/byEmail")
-    @Secured("ROLE_USER")
-    public ResponseEntity<UserProfile> getUserProfileByEmail(@RequestParam String email) {
+    public ResponseEntity<Feedback> getUserProfileByEmail(@RequestParam String email) {
         UserProfile userProfile = userProfileService.getByEmail(email);
+        Feedback.FeedbackBuilder feedbackBuilder = Feedback.builder().timeStamp(LocalDateTime.now());
 
         if (userProfile != null) {
-            return ResponseEntity.ok(userProfile);
+            feedbackBuilder.status(HttpStatus.OK);
+            feedbackBuilder.statusCode(HttpStatus.OK.value());
+            feedbackBuilder.message("User profile found");
+            feedbackBuilder.data(Map.of("userProfile", userProfile));
         } else {
-            return ResponseEntity.notFound().build();
+            feedbackBuilder.status(HttpStatus.NOT_FOUND);
+            feedbackBuilder.statusCode(HttpStatus.NOT_FOUND.value());
+            feedbackBuilder.message("User profile not found");
         }
+
+        Feedback feedback = feedbackBuilder.build();
+
+        return ResponseEntity.status(feedback.getStatus()).body(feedback);
     }
 
+
     @GetMapping("/byPhoneNumber")
-    @Secured("ROLE_USER")
     public ResponseEntity<UserProfile> getUserProfileByPhoneNumber(@RequestParam String phoneNumber) {
         UserProfile userProfile = userProfileService.getByPhoneNumber(phoneNumber);
 
@@ -53,49 +75,61 @@ public class UserProfileController {
         }
     }
 
+   /* @PostMapping("/upload-document/{userID}")
+    public ResponseEntity<Feedback> uploadDocument(@PathVariable String userID, @RequestParam("file") MultipartFile file) {
+        Feedback.FeedbackBuilder feedbackBuilder = Feedback.builder().timeStamp(LocalDateTime.now());
 
+        if (!file.isEmpty()) {
+            UserProfile userProfile = userProfileService.getByUserID(userID);
+            if (userProfile != null) {
+                Document document = new Document();
+                document.setUserProfile(userProfile);
+                document.setDocumentName(file.getOriginalFilename());
+                userProfile.getDocuments().add(document);
+                userProfileService.save(userProfile);
 
-    @PostMapping("/add-experience")
-    public ResponseEntity<UserProfile> addExperience(@RequestBody Experience experience, @PathVariable Long userProfileId) {
-        // Retrieve the user profile by ID
-        UserProfile userProfile = userProfileService.getById(userProfileId);
-        if (userProfile != null) {
-            // Add the experience to the user's profile
-            userProfile.getExperiences().add(experience);
-            // Save the updated profile
-            userProfileService.save(userProfile);
-            return ResponseEntity.ok(userProfile);
+                feedbackBuilder.status(HttpStatus.OK);
+                feedbackBuilder.statusCode(HttpStatus.OK.value());
+                feedbackBuilder.message("Document uploaded successfully");
+                feedbackBuilder.data(Map.of("userProfile", userProfile));
+            } else {
+                feedbackBuilder.status(HttpStatus.NOT_FOUND);
+                feedbackBuilder.statusCode(HttpStatus.NOT_FOUND.value());
+                feedbackBuilder.message("User profile not found");
+            }
         } else {
-            return ResponseEntity.notFound().build();
+            feedbackBuilder.status(HttpStatus.BAD_REQUEST);
+            feedbackBuilder.statusCode(HttpStatus.BAD_REQUEST.value());
+            feedbackBuilder.message("Empty file uploaded");
         }
-    }
 
-    @PostMapping("/update-profile-picture/{id}")
-    public ResponseEntity<UserProfile> updateProfilePicture(@PathVariable String userID, @RequestParam("file") MultipartFile file) {
+        Feedback feedback = feedbackBuilder.build();
+
+        return ResponseEntity.status(feedback.getStatus()).body(feedback);
+    }*/
+
+
+    @PostMapping("/update-profile-picture/{userID}")
+    public ResponseEntity<UserProfile> updateProfilePicture(@PathVariable String userID, MultipartFile file) {
         UserProfile userProfile = userProfileService.getByUserID(userID);
-
         if (userProfile != null) {
             try {
                 userProfile.setProfilePicture(file.getBytes());
                 userProfileService.save(userProfile);
                 return ResponseEntity.ok(userProfile);
             } catch (IOException e) {
-                return ResponseEntity.notFound().build();
-                //return ResponseEntity.badRequest().body("Failed to upload the profile picture: " + e.getMessage());
+                return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(userProfile);
             }
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/delete-profile-picture/{id}")
-    public ResponseEntity<UserProfile> deleteProfilePicture(@PathVariable Long id) {
-        UserProfile userProfile = userProfileService.getById(id);
-
+    @DeleteMapping("/delete-profile-picture/{userID}")
+    public ResponseEntity<UserProfile> deleteProfilePicture(@PathVariable String userID) {
+        UserProfile userProfile = userProfileService.getByUserID(userID);
         if (userProfile != null) {
-            // Set the profile picture to null (or delete it as needed)
             userProfile.setProfilePicture(null);
-            // Save the updated profile
             userProfileService.save(userProfile);
             return ResponseEntity.ok(userProfile);
         } else {
@@ -103,8 +137,26 @@ public class UserProfileController {
         }
     }
 
-
-
-    // Implement endpoints for updating profile picture and other profile details as needed
+    @PutMapping("/update-name-role/{userID}")
+    public ResponseEntity<UserProfile> updateNameAndRole(
+            @PathVariable String userID,
+            @RequestBody UserProfile updatedUserProfile
+    ) {
+        UserProfile userProfile = userProfileService.getByUserID(userID);
+        if (userProfile != null) {
+            userProfile.setFirstName(updatedUserProfile.getFirstName());
+            userProfile.setLastName(updatedUserProfile.getLastName());
+            userProfile.setUsername(updatedUserProfile.getUsername());
+            userProfile.setAddress(updatedUserProfile.getAddress());
+            userProfile.setEmail(updatedUserProfile.getEmail());
+            userProfile.setPhoneNumber(updatedUserProfile.getPhoneNumber());
+            userProfile.setRoleName(updatedUserProfile.getRoleName());
+            userProfileService.save(userProfile);
+            return ResponseEntity.ok(userProfile);
+        } else {
+            UserProfile errorUserProfile = new UserProfile();
+            errorUserProfile.setFirstName("User profile not found for ID: " + userID);
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(errorUserProfile);
+        }
+    }
 }
-

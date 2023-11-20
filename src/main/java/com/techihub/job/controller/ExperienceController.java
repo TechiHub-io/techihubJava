@@ -1,5 +1,6 @@
 package com.techihub.job.controller;
 
+import com.techihub.job.model.UserProfile;
 import com.techihub.job.service.ExperienceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,13 +45,13 @@ public class ExperienceController {
             experience.setCompany(updatedExperience.getCompany());
             experience.setStartDate(updatedExperience.getStartDate());
             experience.setEndDate(updatedExperience.getEndDate());
-            experience.setDescription(updatedExperience.getDescription());
-
+            experience.setWorkSummary(updatedExperience.getWorkSummary());
             experienceService.save(experience);
             return ResponseEntity.ok(experience);
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
 
     @DeleteMapping("/delete/{id}")

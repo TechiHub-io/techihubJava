@@ -10,7 +10,6 @@ public class Document {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String documentName;
-    private String documentUrl;
 
     @ManyToOne
     @JoinColumn(name = "user_profile_id")

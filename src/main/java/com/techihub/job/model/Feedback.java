@@ -6,15 +6,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
-
-import lombok.experimental.SuperBuilder;
 import org.springframework.http.HttpStatus;
 
 import java.util.Map;
 import java.time.LocalDateTime;
 
 @Data
-@SuperBuilder
+@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Feedback {
 	protected LocalDateTime timeStamp;

@@ -1,5 +1,6 @@
 package com.techihub.job.service;
 
+import com.techihub.job.model.Experience;
 import com.techihub.job.model.UserProfile;
 
 public interface UserProfileService {
@@ -12,4 +13,5 @@ public interface UserProfileService {
     UserProfile getByUsername(String phoneNumber);
 
     UserProfile getByUserID(String userID);
+
 }

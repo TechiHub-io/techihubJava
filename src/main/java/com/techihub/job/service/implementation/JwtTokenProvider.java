@@ -18,10 +18,6 @@ import java.util.function.Function;
 
 @Service
 public class JwtTokenProvider {
-
-    //@Value("${jwt.secret}")
-    //private String secretKey;
-
     @Value("${jwt.token.expiration-time}")
     private long tokenExpirationTime;
     @Value("${jwt.refresh-token.expiration}")

@@ -11,11 +11,11 @@ public class Experience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
     private String company;
+    private String title;
     private LocalDate startDate;
     private LocalDate endDate;
-    private String description;
+    private String workSummary;
 
     @ManyToOne
     @JoinColumn(name = "user_profile_id")

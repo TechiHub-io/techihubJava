@@ -1,5 +1,6 @@
 package com.techihub.job.service.implementation;
 
+import com.techihub.job.model.Experience;
 import com.techihub.job.model.UserProfile;
 import com.techihub.job.repository.UserProfileRepository;
 import com.techihub.job.service.UserProfileService;
@@ -48,5 +49,6 @@ public class UserProfileServiceImpl implements UserProfileService {
     public UserProfile getByUserID(String userID) {
         return userProfileRepository.findByUserID(userID);
     }
+
 }
 
