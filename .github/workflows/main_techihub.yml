@@ -50,4 +50,4 @@ jobs:
           app-name: 'techihub'
           slot-name: 'Production'
           package: '*.jar'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FD7B3202ACC2416194D75AAC11A151EB }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_344338C971364960AFDBC07A2DA7B335 }}
