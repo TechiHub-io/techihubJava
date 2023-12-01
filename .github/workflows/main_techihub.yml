@@ -1,53 +1,31 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy JAR app to Azure Web App - techihub
+name: Deploy to Azure
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: windows-latest
+  deploy:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      - name: Set up Java version
-        uses: actions/setup-java@v1
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
         with:
+          distribution: 'adopt'
           java-version: '17'
 
       - name: Build with Maven
         run: mvn clean install
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
-        with:
-          name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
-
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: java-app
-
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
+      - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'techihub'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F745EAF5A4684FF98D7ABB6E68007B52 }}
-          package: '*.jar'
+          app-name: techihub
+          publish-profile: |
+            <publishData><publishProfile profileName="techihub - Web Deploy" publishMethod="MSDeploy" publishUrl="techihub.scm.azurewebsites.net:443" msdeploySite="techihub" userName="$techihub" userPWD="7XQ7ngy1DnHkyltcN72eXf5muPP0419f2ui1rpdzEcbagcwZHJrwiLpNeGHb" destinationAppUrl="https://techihub.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="https://portal.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="techihub - FTP" publishMethod="FTP" publishUrl="ftps://waws-prod-blu-485.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="techihub\$techihub" userPWD="7XQ7ngy1DnHkyltcN72eXf5muPP0419f2ui1rpdzEcbagcwZHJrwiLpNeGHb" destinationAppUrl="https://techihub.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="https://portal.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="techihub - Zip Deploy" publishMethod="ZipDeploy" publishUrl="techihub.scm.azurewebsites.net:443" userName="$techihub" userPWD="7XQ7ngy1DnHkyltcN72eXf5muPP0419f2ui1rpdzEcbagcwZHJrwiLpNeGHb" destinationAppUrl="https://techihub.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="https://portal.azure.com" webSystem="WebSites"><databases /></publishProfile></publishData>
+          package: target/*.jar
