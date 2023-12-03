@@ -49,9 +49,8 @@ custom:
   validation:
     email:
       pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-
       # Password regex pattern
-      password:
+    password:
         pattern: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'
 
 # JWT Configuration
