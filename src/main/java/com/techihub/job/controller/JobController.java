@@ -24,8 +24,7 @@ public class JobController {
     public ResponseEntity<Feedback> getJobs(){
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(
-        	Feedback.builder()
+                .body(Feedback.builder()
         		    .timeStamp(now())
                     .data(of("jobs", jobService.list(30 )))
                     .message("Jobs Retrieved")
