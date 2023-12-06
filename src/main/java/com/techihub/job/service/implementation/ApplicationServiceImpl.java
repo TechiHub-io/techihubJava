@@ -17,7 +17,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository applicationRepository;
     @Override
     public Application create(Application application) {
-        //log.info("Making job Application: {}",  application.getjob());
+        log.info("Making job Application: {}",  application.getJob());
         return applicationRepository.save(application);
     }
 }
