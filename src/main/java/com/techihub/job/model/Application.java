@@ -23,4 +23,5 @@ public class Application {
 	 @ManyToOne
 	 @JoinColumn(name = "applicant_id")
 	 private User applicant;
+
 }

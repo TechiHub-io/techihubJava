@@ -37,7 +37,7 @@ public class ExperienceController {
         return ResponseEntity.ok(experience);
     }
 
-    @PutMapping("/update/{id}")
+    /*@PutMapping("/update/{id}")
     public ResponseEntity<Experience> updateExperience(@PathVariable Long id, @RequestBody Experience updatedExperience) {
         Experience experience = experienceService.getById(id);
         if (experience != null) {
@@ -52,7 +52,7 @@ public class ExperienceController {
             return ResponseEntity.notFound().build();
         }
 
-    }
+    }*/
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteExperience(@PathVariable Long id) {
