@@ -9,4 +9,4 @@ services:
       - "8080:80"
     volumes:
       - ./target/job-0.0.1-SNAPSHOT.jar:/app/job-0.0.1-SNAPSHOT.jar
-    command: ["java", "-jar", "your-application.jar"]
+    command: ["java", "-jar", "job-0.0.1-SNAPSHOT.jar"]
