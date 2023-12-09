@@ -4,7 +4,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://techihubserver.postgres.database.azure.com:5432/postgres?user=techihub001&password=area57@5298!!&sslmode=require
+    url: jdbc:postgresql://techihub.postgres.database.azure.com:5432/postgres?user=techihub001&password=area57@5298!!&sslmode=require
     username: techihub001
     password: area57@5298!!
     driver-class-name: org.postgresql.Driver
