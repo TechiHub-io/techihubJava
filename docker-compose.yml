@@ -3,7 +3,7 @@ version: '3'
 services:
   your-app:
     image: openjdk:17
-    container_name: techihub
+    container_name: techihubprod
     working_dir: /app
     ports:
       - "8080:80"
