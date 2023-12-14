@@ -3,7 +3,7 @@ name: Deploy to Azure
 on:
   push:
     branches:
-      - main
+      - workflow
 
 jobs:
   deploy:
@@ -25,7 +25,7 @@ jobs:
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
         with:
-          app-name: techihub
+          app-name: techihubProd
           publish-profile: |
-            <publishData><publishProfile profileName="techihub - Web Deploy" publishMethod="MSDeploy" publishUrl="techihub.scm.azurewebsites.net:443" msdeploySite="techihub" userName="$techihub" userPWD="7XQ7ngy1DnHkyltcN72eXf5muPP0419f2ui1rpdzEcbagcwZHJrwiLpNeGHb" destinationAppUrl="https://techihub.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="https://portal.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="techihub - FTP" publishMethod="FTP" publishUrl="ftps://waws-prod-blu-485.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="techihub\$techihub" userPWD="7XQ7ngy1DnHkyltcN72eXf5muPP0419f2ui1rpdzEcbagcwZHJrwiLpNeGHb" destinationAppUrl="https://techihub.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="https://portal.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="techihub - Zip Deploy" publishMethod="ZipDeploy" publishUrl="techihub.scm.azurewebsites.net:443" userName="$techihub" userPWD="7XQ7ngy1DnHkyltcN72eXf5muPP0419f2ui1rpdzEcbagcwZHJrwiLpNeGHb" destinationAppUrl="https://techihub.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="https://portal.azure.com" webSystem="WebSites"><databases /></publishProfile></publishData>
+            <publishData><publishProfile profileName="techihubProd - Web Deploy" publishMethod="MSDeploy" publishUrl="techihubprod.scm.azurewebsites.net:443" msdeploySite="techihubProd" userName="$techihubProd" userPWD="K3msA7NFbSZmvB4f2wpomBLvlpr6J9LXxAXgG8Wo8LBYxpnr75Cxwd2djCzB" destinationAppUrl="https://techihubprod.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="https://portal.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="techihubProd - FTP" publishMethod="FTP" publishUrl="ftps://waws-prod-blu-519.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="techihubProd\$techihubProd" userPWD="K3msA7NFbSZmvB4f2wpomBLvlpr6J9LXxAXgG8Wo8LBYxpnr75Cxwd2djCzB" destinationAppUrl="https://techihubprod.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="https://portal.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="techihubProd - Zip Deploy" publishMethod="ZipDeploy" publishUrl="techihubprod.scm.azurewebsites.net:443" userName="$techihubProd" userPWD="K3msA7NFbSZmvB4f2wpomBLvlpr6J9LXxAXgG8Wo8LBYxpnr75Cxwd2djCzB" destinationAppUrl="https://techihubprod.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="https://portal.azure.com" webSystem="WebSites"><databases /></publishProfile></publishData>
           package: target/*.jar
