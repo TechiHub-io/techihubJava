@@ -12,7 +12,7 @@ public class Configs {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        //configuration.addAllowedOrigin("https://techihub.io, http://techihub.io, http://localhost:5173/");
+        configuration.addAllowedOrigin("*");
         configuration.addAllowedOrigin("https://techihub.io");
         configuration.addAllowedOrigin("http://techihub.io");
         configuration.addAllowedOrigin("http://localhost:5173");
