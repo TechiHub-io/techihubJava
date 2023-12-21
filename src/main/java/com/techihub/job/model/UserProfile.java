@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 public class UserProfile {
@@ -43,16 +46,17 @@ public class UserProfile {
     @JsonProperty("user_id")
     private String userID;
 
+    @JsonProperty("githubUrl")
+    private String githubUrl;
+
+    @JsonProperty("linkedinUrl")
+    private String linkedinUrl;
+
+    @Column(length = 1000)
+    @JsonProperty("about")
+    private String about;
+
     public String getUserId() {
         return this.userID;
     }
-    /*@OneToMany(mappedBy = "userProfile")
-    private List<Experience> experiences = new ArrayList<>();
-
-
-     @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonProperty("documents")
-    private List<Document> documents = new ArrayList<>();*/
-
-
 }

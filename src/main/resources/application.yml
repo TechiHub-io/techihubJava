@@ -1,12 +1,16 @@
 server:
   address: 0.0.0.0
   port: 80
+  //port: 8080
 
 spring:
   datasource:
     url: jdbc:postgresql://techihub.postgres.database.azure.com:5432/postgres?user=techihub001&password=area57@5298!!&sslmode=require
+    //url: jdbc:postgresql://localhost:5432/techihub
     username: techihub001
+    //username: postgres
     password: area57@5298!!
+    //password: Eunicetwin@1999
     driver-class-name: org.postgresql.Driver
     ssl: true
     ssl-root-cert: classpath:azure-database-certificate.crt

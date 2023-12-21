@@ -1,5 +1,6 @@
 package com.techihub.job.controller;
 
+import com.techihub.job.model.Experience;
 import com.techihub.job.model.Feedback;
 import com.techihub.job.model.UserProfile;
 import com.techihub.job.service.UserProfileService;
@@ -151,6 +152,9 @@ public class UserProfileController {
             userProfile.setEmail(updatedUserProfile.getEmail());
             userProfile.setPhoneNumber(updatedUserProfile.getPhoneNumber());
             userProfile.setRoleName(updatedUserProfile.getRoleName());
+            userProfile.setGithubUrl(updatedUserProfile.getGithubUrl());
+            userProfile.setLinkedinUrl(updatedUserProfile.getLinkedinUrl());
+            userProfile.setAbout(updatedUserProfile.getAbout());
             userProfileService.save(userProfile);
             return ResponseEntity.ok(userProfile);
         } else {
