@@ -4,18 +4,36 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.techihub.job.enums.Permission.*;
 
-
+@Getter
 @RequiredArgsConstructor
 public enum Role {
 
-    USER(Collections.emptySet()),
+    SUPERADMIN(
+            Set.of(
+                    ADMIN_READ,
+                    ADMIN_UPDATE,
+                    ADMIN_DELETE,
+                    ADMIN_CREATE,
+                    MANAGER_READ,
+                    MANAGER_UPDATE,
+                    MANAGER_DELETE,
+                    MANAGER_CREATE,
+                    CANDIDATE_READ,
+                    CANDIDATE_UPDATE,
+                    CANDIDATE_DELETE,
+                    CANDIDATE_CREATE,
+                    EMPLOYER_READ,
+                    EMPLOYER_UPDATE,
+                    EMPLOYER_DELETE,
+                    EMPLOYER_CREATE
+            )
+    ),
     ADMIN(
             Set.of(
                     ADMIN_READ,
@@ -25,7 +43,15 @@ public enum Role {
                     MANAGER_READ,
                     MANAGER_UPDATE,
                     MANAGER_DELETE,
-                    MANAGER_CREATE
+                    MANAGER_CREATE,
+                    CANDIDATE_READ,
+                    CANDIDATE_UPDATE,
+                    CANDIDATE_DELETE,
+                    CANDIDATE_CREATE,
+                    EMPLOYER_READ,
+                    EMPLOYER_UPDATE,
+                    EMPLOYER_DELETE,
+                    EMPLOYER_CREATE
             )
     ),
     MANAGER(
@@ -33,13 +59,30 @@ public enum Role {
                     MANAGER_READ,
                     MANAGER_UPDATE,
                     MANAGER_DELETE,
-                    MANAGER_CREATE
+                    MANAGER_CREATE,
+                    CANDIDATE_READ,
+                    EMPLOYER_READ,
+                    EMPLOYER_CREATE
             )
-    )
+    ),
+    EMPLOYER(
+            Set.of(
+                    EMPLOYER_READ,
+                    EMPLOYER_UPDATE,
+                    EMPLOYER_DELETE,
+                    EMPLOYER_CREATE,
+                    CANDIDATE_READ
+            )
+    ),
+    CANDIDATE(
+            Set.of(
+                    CANDIDATE_READ,
+                    CANDIDATE_UPDATE,
+                    CANDIDATE_DELETE,
+                    CANDIDATE_CREATE
+            )
+    );
 
-    ;
-
-    @Getter
     private final Set<Permission> permissions;
 
     public List<SimpleGrantedAuthority> getAuthorities() {

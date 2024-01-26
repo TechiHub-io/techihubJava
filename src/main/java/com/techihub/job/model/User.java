@@ -2,13 +2,11 @@ package com.techihub.job.model;
 
 import com.techihub.job.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -30,7 +28,12 @@ public class User implements UserDetails {
 	private Boolean emailConfirmed;
 	@Column(name = "confirmation_token")
 	private String confirmationToken;
+	@Setter
+	@Column(name = "token_expiration")
+	private LocalDateTime tokenExpiration;
 
+	@Setter
+	@Getter
 	@Enumerated(EnumType.STRING)
 	private Role role;
 

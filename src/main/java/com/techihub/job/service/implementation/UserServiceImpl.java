@@ -1,6 +1,7 @@
 package com.techihub.job.service.implementation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.techihub.job.enums.Role;
 import com.techihub.job.exception.InvalidPasswordException;
 import com.techihub.job.exception.UserNotFoundException;
 import com.techihub.job.model.*;
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
         private String passwordPattern;
 
 
-        public ResponseEntity<Feedback> registerUser(UserRegistration userRegistration) throws MessagingException {
+        public ResponseEntity<Feedback> registerUser(UserRegistration userRegistration,Role role) throws MessagingException {
                         if (!userRegistration.getEmail().matches(emailPattern)) {
                                 Feedback feedback = Feedback.builder()
                                         .timeStamp(LocalDateTime.now())
@@ -108,19 +109,21 @@ public class UserServiceImpl implements UserService {
                         User user = new User();
                         user.setEmail(userRegistration.getEmail());
                         user.setPassword(hashedPassword);
+                        user.setRole(Role.CANDIDATE);
                         user.setUserProfile(userProfile);
+
                         userRepository.save(user);
 
                         log.info("Confirm email address for registration");
 
                         if (user != null) {
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.add(Calendar.MINUTE, 10);
-                                Date expirationTime = calendar.getTime();
-
+                                LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10);
                                 String confirmationToken = UUID.randomUUID().toString();
 
-                                registerUser(userRegistration);
+                                user.setConfirmationToken(confirmationToken);
+                                user.setTokenExpiration(expirationTime);
+
+                                registerUser(userRegistration, Role.CANDIDATE);
                                 log.info("Confirm email address for registration");
 
                                 saveUser(user);
@@ -128,8 +131,9 @@ public class UserServiceImpl implements UserService {
 
                                 String confirmationLink = "https://Techihub.io/confirm?token=" + confirmationToken;
                                 String emailText = "Click the link to confirm your email: " + confirmationLink + " The Link expires in 10 minutes";
+                                String emailSubject = "Techihub Email Confirmation";
 
-                                emailService.sendConfirmationEmail(userRegistration.getEmail(), "Email Confirmation", emailText);
+                                emailService.sendConfirmationEmail(userRegistration.getEmail(),  emailSubject, emailText);
                                 String loginRedirectUrl = "redirect:/login";
                                 Feedback feedback = Feedback.builder()
                                         .timeStamp(LocalDateTime.now())
@@ -154,7 +158,7 @@ public class UserServiceImpl implements UserService {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(feedback);
                 }
 
-        public ResponseEntity<Feedback> registerEmployer(UserRegistration userRegistration) throws MessagingException {
+        public ResponseEntity<Feedback> registerEmployer(UserRegistration userRegistration, Role employer) throws MessagingException {
                 if (!userRegistration.getEmail().matches(emailPattern)) {
                         Feedback feedback = Feedback.builder()
                                 .timeStamp(LocalDateTime.now())
@@ -214,18 +218,19 @@ public class UserServiceImpl implements UserService {
                 user.setEmail(userRegistration.getEmail());
                 user.setPassword(hashedPassword);
                 user.setUserProfile(userProfile);
+                user.setRole(Role.EMPLOYER);
                 userRepository.save(user);
 
                 log.info("Confirm email address for registration");
 
                 if (user != null) {
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.add(Calendar.MINUTE, 10);
-                        Date expirationTime = calendar.getTime();
-
+                        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10);
                         String confirmationToken = UUID.randomUUID().toString();
 
-                        registerUser(userRegistration);
+                        user.setConfirmationToken(confirmationToken);
+                        user.setTokenExpiration(expirationTime);
+
+                        registerUser(userRegistration, Role.EMPLOYER);
                         log.info("Confirm email address for registration");
 
                         saveUser(user);
@@ -233,8 +238,9 @@ public class UserServiceImpl implements UserService {
 
                         String confirmationLink = "https://Techihub.io/confirm?token=" + confirmationToken;
                         String emailText = "Click the link to confirm your email: " + confirmationLink + " The Link expires in 10 minutes";
+                        String emailSubject = "Techihub Email Confirmation";
 
-                        emailService.sendConfirmationEmail(userRegistration.getEmail(), "Email Confirmation", emailText);
+                        emailService.sendConfirmationEmail(userRegistration.getEmail(), emailSubject, emailText);
                         String loginRedirectUrl = "redirect:/login";
                         Feedback feedback = Feedback.builder()
                                 .timeStamp(LocalDateTime.now())
@@ -352,11 +358,11 @@ public class UserServiceImpl implements UserService {
                         }
                 }
         }
-
         @Override
         public Boolean isEmailAlreadyRegistered(String email) {
                 return userRepository.existsByEmail(email);
         }
+
 
         @Override
         public Optional<User> findByEmail(String email) {
@@ -368,12 +374,55 @@ public class UserServiceImpl implements UserService {
                 userRepository.save(user);
 
         }
-
         @Override
-        public Optional<User> getUserByConfirmationToken(String confirmationToken) {
-                return userRepository.findByConfirmationToken(confirmationToken);
-        }
+        public ResponseEntity<Feedback> confirmEmail(String confirmationToken) {
+                Optional<User> optionalUser = userRepository.findByConfirmationToken(confirmationToken);
+                if (optionalUser.isPresent()) {
+                        User user = optionalUser.get();
 
+                        if (user != null && user.getEmailConfirmed() == null &&
+                                confirmationToken.equals(user.getConfirmationToken()) && user.getTokenExpiration() != null &&
+                                user.getTokenExpiration().isAfter(LocalDateTime.now())) {
+                                user.setEmailConfirmed(true);
+
+                        userRepository.save(user);
+                        log.info("Email confirmed for user: " + user.getEmail());
+
+                        Feedback feedback = Feedback.builder()
+                                .timeStamp(LocalDateTime.now())
+                                .statusCode(HttpStatus.OK.value())
+                                .status(HttpStatus.OK)
+                                .reason("Success")
+                                .message("Email confirmed successfully")
+                                .data(null)
+                                .build();
+                        return ResponseEntity.ok(feedback);
+
+                } else {
+                        log.error("Invalid or expired confirmation token");
+                        Feedback feedback = Feedback.builder()
+                                .timeStamp(LocalDateTime.now())
+                                .statusCode(HttpStatus.BAD_REQUEST.value())
+                                .status(HttpStatus.BAD_REQUEST)
+                                .reason("Bad Request")
+                                .message("Invalid or expired confirmation token")
+                                .data(null)
+                                .build();
+                        return ResponseEntity.badRequest().body(feedback);
+                }
+                } else {
+                        log.error("User not found for confirmation token");
+                        Feedback feedback = Feedback.builder()
+                                .timeStamp(LocalDateTime.now())
+                                .statusCode(HttpStatus.NOT_FOUND.value())
+                                .status(HttpStatus.NOT_FOUND)
+                                .reason("Not Found")
+                                .message("User not found for confirmation token")
+                                .data(null)
+                                .build();
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(feedback);
+                }
+        }
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
                 return null;

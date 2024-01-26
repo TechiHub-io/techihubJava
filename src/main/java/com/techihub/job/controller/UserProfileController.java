@@ -75,41 +75,6 @@ public class UserProfileController {
             return ResponseEntity.notFound().build();
         }
     }
-
-   /* @PostMapping("/upload-document/{userID}")
-    public ResponseEntity<Feedback> uploadDocument(@PathVariable String userID, @RequestParam("file") MultipartFile file) {
-        Feedback.FeedbackBuilder feedbackBuilder = Feedback.builder().timeStamp(LocalDateTime.now());
-
-        if (!file.isEmpty()) {
-            UserProfile userProfile = userProfileService.getByUserID(userID);
-            if (userProfile != null) {
-                Document document = new Document();
-                document.setUserProfile(userProfile);
-                document.setDocumentName(file.getOriginalFilename());
-                userProfile.getDocuments().add(document);
-                userProfileService.save(userProfile);
-
-                feedbackBuilder.status(HttpStatus.OK);
-                feedbackBuilder.statusCode(HttpStatus.OK.value());
-                feedbackBuilder.message("Document uploaded successfully");
-                feedbackBuilder.data(Map.of("userProfile", userProfile));
-            } else {
-                feedbackBuilder.status(HttpStatus.NOT_FOUND);
-                feedbackBuilder.statusCode(HttpStatus.NOT_FOUND.value());
-                feedbackBuilder.message("User profile not found");
-            }
-        } else {
-            feedbackBuilder.status(HttpStatus.BAD_REQUEST);
-            feedbackBuilder.statusCode(HttpStatus.BAD_REQUEST.value());
-            feedbackBuilder.message("Empty file uploaded");
-        }
-
-        Feedback feedback = feedbackBuilder.build();
-
-        return ResponseEntity.status(feedback.getStatus()).body(feedback);
-    }*/
-
-
     @PostMapping("/update-profile-picture/{userID}")
     public ResponseEntity<UserProfile> updateProfilePicture(@PathVariable String userID, MultipartFile file) {
         UserProfile userProfile = userProfileService.getByUserID(userID);

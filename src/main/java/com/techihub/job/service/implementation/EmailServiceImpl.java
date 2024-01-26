@@ -23,8 +23,9 @@ public class EmailServiceImpl implements EmailService {
 
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
-            mimeMessageHelper.setFrom("samwelnjunji@gmail.com");
+            mimeMessageHelper.setFrom("support@techihub.io");
             mimeMessageHelper.setTo(to);
+            mimeMessageHelper.setSubject(subject);
             mimeMessageHelper.setText(text, true);
 
             emailSender.send(mimeMessage);
