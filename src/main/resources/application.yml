@@ -5,7 +5,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://pelikantechihubserver.postgres.database.azure.com:5432/postgres?user=techihub001&password=area57@5298!!&sslmode=require
+    url: jdbc:postgresql://pelikantechihubserver.postgres.database.azure.com:5432/postgres?user=techihub&password=area57@5298!!&sslmode=require
     //url: jdbc:postgresql://localhost:5432/techihub
     username: techihub
     //username: postgres
