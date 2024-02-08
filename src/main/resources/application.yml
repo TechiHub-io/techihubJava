@@ -5,8 +5,11 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://pelikantechihubserver.postgres.database.azure.com:5432/postgres?user=techihub&password=area57@5298!!&sslmode=require
+    //url: jdbc:postgresql://localhost:5432/techihub
     username: techihub
+    //username: postgres
     password: area57@5298!!
+    //password: Eunicetwin@1999
     driver-class-name: org.postgresql.Driver
     ssl: true
     ssl-root-cert: classpath:azure-database-certificate.crt
@@ -36,7 +39,7 @@ spring:
 
 # MVC Configuration
 mvc:
-  content negotiation:
+  contentnegotiation:
     favor-parameter: false
     favor-path-extension: true
     defaultContentType: application/JSON
