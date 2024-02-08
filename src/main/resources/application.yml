@@ -36,7 +36,7 @@ spring:
 
 # MVC Configuration
 mvc:
-  contentnegotiation:
+  content negotiation:
     favor-parameter: false
     favor-path-extension: true
     defaultContentType: application/JSON
