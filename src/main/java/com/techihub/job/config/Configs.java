@@ -16,7 +16,7 @@ public class Configs {
         configuration.addAllowedOrigin("https://techihub.io");
         configuration.addAllowedOrigin("http://techihub.io");
         configuration.addAllowedOrigin("http://localhost:5173");
-        configuration.addAllowedOrigin("https://pelikan-techihub.azurewebsites.net");
+        configuration.addAllowedOrigin("https://techihub.azurewebsites.net");
         configuration.addAllowedMethod("GET");
         configuration.addAllowedMethod("POST");
         configuration.addAllowedMethod("PUT");
