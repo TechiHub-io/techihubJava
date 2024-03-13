@@ -1,16 +1,19 @@
 server:
   address: 0.0.0.0
-  port: 80
+  //port: 80
+  port: 8080
 
 spring:
   datasource:
-    url: jdbc:postgresql://techihub-techily.postgres.database.azure.com:5432/postgres?user=techihub&password=area57@5298!!&sslmode=require
-    username: techihub
-    password: area57@5298!!
+    //url: jdbc:postgresql://techihub-techily.postgres.database.azure.com:5432/postgres?user=techihub&password=area57@5298!!&sslmode=require
+    url: jdbc:postgresql://localhost:5432/techihub
+    //username: techihub
+    username: postgres
+    //password: area57@5298!!
+    password: Eunicetwin@1999
     driver-class-name: org.postgresql.Driver
     ssl: true
     ssl-root-cert: classpath:azure-database-certificate.crt
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,6 +23,8 @@ spring:
           dialect: org.hibernate.dialect.PostgreSQLDialect
           format_sql: true
           show_sql: true
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 
   mail:
     host: smtp.gmail.com

@@ -1,3 +1,4 @@
+
 package com.techihub.job.controller;
 
 
@@ -37,3 +38,4 @@ public class ApplicationController {
     }
     //standard and premium
 }
+

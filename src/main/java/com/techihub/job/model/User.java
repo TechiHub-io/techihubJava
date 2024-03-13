@@ -28,6 +28,8 @@ public class User implements UserDetails {
 	private Boolean emailConfirmed;
 	@Column(name = "confirmation_token")
 	private String confirmationToken;
+	@Column(name = "reset_token")
+	private String resetToken;
 	@Setter
 	@Column(name = "token_expiration")
 	private LocalDateTime tokenExpiration;

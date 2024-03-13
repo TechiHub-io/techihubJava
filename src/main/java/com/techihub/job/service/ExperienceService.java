@@ -1,14 +1,11 @@
 package com.techihub.job.service;
 
 import com.techihub.job.model.Experience;
-import com.techihub.job.model.UserProfile;
-
-import java.util.List;
+import com.techihub.job.model.Feedback;
+import org.springframework.http.ResponseEntity;
 
 public interface ExperienceService {
-   Experience getById(Long id);
-    List<Experience>getAllExperiences();
-    Experience save(Experience experience);
-    Experience delete(Long id);
-
+    ResponseEntity<Feedback> createExperience(String userProfileId, Experience experience);
+    ResponseEntity<Feedback> updateExperience(String userProfileId, Long experienceId, Experience experience);
+    ResponseEntity<Feedback> deleteExperience(String userProfileId, Long experienceId);
 }

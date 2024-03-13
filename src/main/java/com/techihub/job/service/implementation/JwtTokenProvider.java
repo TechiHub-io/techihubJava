@@ -23,7 +23,6 @@ public class JwtTokenProvider {
     @Value("${jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
-    // Replace your existing secretKey field with this line
     private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
 

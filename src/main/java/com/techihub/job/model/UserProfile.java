@@ -2,6 +2,7 @@ package com.techihub.job.model;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Data
 @Entity
+@Table(name = "user_profile")
 public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +34,7 @@ public class UserProfile {
     @JsonProperty("role_name")
     private String roleName;
 
-    @OneToOne(mappedBy = "userProfile")
+    @OneToOne(mappedBy = "userProfile", cascade = CascadeType.ALL)
     @JsonIgnore
     private User user;
 
@@ -52,9 +54,17 @@ public class UserProfile {
     @JsonProperty("linkedinUrl")
     private String linkedinUrl;
 
-    @Column(length = 1000)
     @JsonProperty("about")
+    @Size(max = 1000, message = "About must be 10000 characters or less")
     private String about;
+
+   @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL)
+    @JsonProperty("experience")
+    private List<Experience> experienceList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL)
+    @JsonProperty("education")
+    private List<Education> educationList = new ArrayList<>();
 
     public String getUserId() {
         return this.userID;

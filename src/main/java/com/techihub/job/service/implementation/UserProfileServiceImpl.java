@@ -1,12 +1,13 @@
 package com.techihub.job.service.implementation;
 
-import com.techihub.job.model.Experience;
 import com.techihub.job.model.UserProfile;
 import com.techihub.job.repository.UserProfileRepository;
 import com.techihub.job.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 
 @Service
@@ -46,7 +47,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public UserProfile getByUserID(String userID) {
+    public Optional<UserProfile> getByUserID(String userID) {
         return userProfileRepository.findByUserID(userID);
     }
 

@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -24,7 +25,7 @@ public class UserProfileController {
 
     @GetMapping("/{userID}")
     public ResponseEntity<Feedback> getUserProfile(@PathVariable String userID) {
-        UserProfile userProfile = userProfileService.getByUserID(userID);
+        Optional<UserProfile> userProfile = userProfileService.getByUserID(userID);
         Feedback feedback = Feedback.builder().timeStamp(LocalDateTime.now()).build();
 
         if (userProfile != null) {
@@ -77,24 +78,27 @@ public class UserProfileController {
     }
     @PostMapping("/update-profile-picture/{userID}")
     public ResponseEntity<UserProfile> updateProfilePicture(@PathVariable String userID, MultipartFile file) {
-        UserProfile userProfile = userProfileService.getByUserID(userID);
-        if (userProfile != null) {
+        Optional<UserProfile> userProfileOptional = userProfileService.getByUserID(userID);
+        if (userProfileOptional.isPresent()) {
+            UserProfile userProfile = userProfileOptional.get();
             try {
                 userProfile.setProfilePicture(file.getBytes());
                 userProfileService.save(userProfile);
                 return ResponseEntity.ok(userProfile);
             } catch (IOException e) {
-                return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(userProfile);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(userProfile);
             }
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
+
     @DeleteMapping("/delete-profile-picture/{userID}")
     public ResponseEntity<UserProfile> deleteProfilePicture(@PathVariable String userID) {
-        UserProfile userProfile = userProfileService.getByUserID(userID);
-        if (userProfile != null) {
+        Optional<UserProfile> userProfileOptional = userProfileService.getByUserID(userID);
+        if (userProfileOptional.isPresent()) {
+            UserProfile userProfile = userProfileOptional.get();
             userProfile.setProfilePicture(null);
             userProfileService.save(userProfile);
             return ResponseEntity.ok(userProfile);
@@ -103,13 +107,15 @@ public class UserProfileController {
         }
     }
 
+
     @PutMapping("/update-name-role/{userID}")
     public ResponseEntity<UserProfile> updateNameAndRole(
             @PathVariable String userID,
             @RequestBody UserProfile updatedUserProfile
     ) {
-        UserProfile userProfile = userProfileService.getByUserID(userID);
-        if (userProfile != null) {
+        Optional<UserProfile> userProfileOptional = userProfileService.getByUserID(userID);
+        if (userProfileOptional.isPresent()) {
+            UserProfile userProfile = userProfileOptional.get();
             userProfile.setFirstName(updatedUserProfile.getFirstName());
             userProfile.setLastName(updatedUserProfile.getLastName());
             userProfile.setUsername(updatedUserProfile.getUsername());
