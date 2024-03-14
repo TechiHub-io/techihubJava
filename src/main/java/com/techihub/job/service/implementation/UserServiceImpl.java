@@ -423,6 +423,80 @@ public class UserServiceImpl implements UserService {
                         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(feedback);
                 }
         }
+
+        public ResponseEntity<Feedback> forgotPassword(String email) throws MessagingException {
+                Optional<User> optionalUser = userRepository.findByEmail(email);
+                if (optionalUser.isPresent()) {
+                        User user = optionalUser.get();
+                        String resetToken = UUID.randomUUID().toString().replaceAll("[^a-zA-Z0-9]", "").substring(0, 8);
+                        resetToken = resetToken.replaceAll("\\s+", "");
+                        user.setResetToken(resetToken);
+                        userRepository.save(user);
+
+                        String resetLink = "https://Techihub.io/reset-password";
+                        String emailText = "Use the generated token to create a new Password: "  + resetToken + " Click the link provided " + resetLink;
+                        String emailSubject = "Techihub Password Reset";
+
+                        emailService.sendConfirmationEmail(email, emailSubject, emailText);
+
+                        log.info("Password reset link sent to user: {}", email);
+
+                        Feedback feedback = Feedback.builder()
+                                .timeStamp(LocalDateTime.now())
+                                .statusCode(HttpStatus.OK.value())
+                                .status(HttpStatus.OK)
+                                .reason("Success")
+                                .message("Password reset link sent to email: " + email)
+                                .data(null)
+                                .build();
+                        return ResponseEntity.ok(feedback);
+                } else {
+                        log.error("User not found for email: {}", email);
+                        Feedback feedback = Feedback.builder()
+                                .timeStamp(LocalDateTime.now())
+                                .statusCode(HttpStatus.NOT_FOUND.value())
+                                .status(HttpStatus.NOT_FOUND)
+                                .reason("Not Found")
+                                .message("User not found for email: " + email)
+                                .data(null)
+                                .build();
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(feedback);
+                }
+        }
+
+        public ResponseEntity<Feedback> resetPassword(String resetToken, String newPassword) {
+                Optional<User> optionalUser = userRepository.findByResetToken(resetToken);
+                if (optionalUser.isPresent()) {
+                        User user = optionalUser.get();
+                        String hashedPassword = passwordEncoder.encode(newPassword);
+                        user.setPassword(hashedPassword);
+                        user.setResetToken(null);
+                        userRepository.save(user);
+
+                        log.info("Password reset successfully for user: {}", user.getEmail());
+
+                        Feedback feedback = Feedback.builder()
+                                .timeStamp(LocalDateTime.now())
+                                .statusCode(HttpStatus.OK.value())
+                                .status(HttpStatus.OK)
+                                .reason("Success")
+                                .message("Password reset successfully")
+                                .data(null)
+                                .build();
+                        return ResponseEntity.ok(feedback);
+                } else {
+                        log.error("Invalid or expired reset token");
+                        Feedback feedback = Feedback.builder()
+                                .timeStamp(LocalDateTime.now())
+                                .statusCode(HttpStatus.BAD_REQUEST.value())
+                                .status(HttpStatus.BAD_REQUEST)
+                                .reason("Bad Request")
+                                .message("Invalid or expired reset token")
+                                .data(null)
+                                .build();
+                        return ResponseEntity.badRequest().body(feedback);
+                }
+        }
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
                 return null;

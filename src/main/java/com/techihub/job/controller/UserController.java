@@ -83,5 +83,28 @@ public class UserController {
         }
     }
 
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Feedback> forgotPassword(@RequestParam String email) throws MessagingException {
+        return service.forgotPassword(email);
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<Feedback> resetPassword(@RequestBody ResetPassword resetPassword) {
+        String resetToken = resetPassword.getResetToken();
+        String newPassword = resetPassword.getNewPassword();
+        String confirmPassword = resetPassword.getConfirmPassword();
+        if (!newPassword.equals(confirmPassword)) {
+            Feedback feedback = Feedback.builder()
+                    .timeStamp(LocalDateTime.now())
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .status(HttpStatus.BAD_REQUEST)
+                    .reason("Bad Request")
+                    .message("New password and confirm password do not match")
+                    .data(null)
+                    .build();
+            return ResponseEntity.badRequest().body(feedback);
+        }
+        return service.resetPassword(resetToken, newPassword);
+    }
+
 
 }

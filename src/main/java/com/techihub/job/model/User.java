@@ -31,6 +31,8 @@ public class User implements UserDetails {
 	@Setter
 	@Column(name = "token_expiration")
 	private LocalDateTime tokenExpiration;
+	@Column(name = "reset_token")
+	private String resetToken;
 
 	@Setter
 	@Getter
