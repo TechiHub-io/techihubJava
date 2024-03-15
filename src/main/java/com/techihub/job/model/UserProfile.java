@@ -52,9 +52,17 @@ public class UserProfile {
     @JsonProperty("linkedinUrl")
     private String linkedinUrl;
 
-    @Column(length = 1000)
     @JsonProperty("about")
+    @Column(columnDefinition = "TEXT", length = -1)
     private String about;
+
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL)
+    @JsonProperty("educations")
+    private List<Education> educations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL)
+    @JsonProperty("experiences")
+    private List<Experience> experiences = new ArrayList<>();
 
     public String getUserId() {
         return this.userID;

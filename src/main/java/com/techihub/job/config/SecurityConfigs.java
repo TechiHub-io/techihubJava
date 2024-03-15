@@ -28,8 +28,8 @@ public class SecurityConfigs {
                 })
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/users/**","/api/v1/admin/**").permitAll()
-                        .requestMatchers("/employer/profile/**", "/api/users/**").permitAll()
+                        .requestMatchers("/api/users/**","/api/v1/admin/**","/experience/**").permitAll()
+                        .requestMatchers("/employer/profile/**", "/api/users/**","/educations/**").permitAll()
                         .requestMatchers("/employer/postJob/**").hasAuthority("EMPLOYER")
                         .requestMatchers("/techihub/**").permitAll()
                         .requestMatchers("/api/applications/apply/**").permitAll()//.hasAuthority("EMPLOYEE")

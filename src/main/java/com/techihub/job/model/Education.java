@@ -10,25 +10,34 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-public class Experience {
+public class Education {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JsonProperty("company")
-    private String company;
-    @JsonProperty("title")
-    private String title;
-    @JsonProperty("startDate")
-    private LocalDate startDate;
-    @JsonProperty("endDate")
-    private LocalDate endDate;
-    @JsonProperty("workSummary")
-    @Size(max = 1000, message = "Experience must be 10000 characters or less")
-    private String workSummary;
 
     @ManyToOne
     @JoinColumn(name = "user_profile_id")
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private UserProfile userProfile;
+
+    @JsonProperty("course")
+    private String course;
+
+    @JsonProperty("school_name")
+    private String schoolName;
+
+    @JsonProperty("startDate")
+    private LocalDate startDate;
+
+    @JsonProperty("endDate")
+    private LocalDate endDate;
+
+   /* @JsonProperty("summary")
+    @Size(max = 1000, message = "Experience must be 10000 characters or less")
+    private String summary;*/
+
+    @JsonProperty("summary")
+    @Column(columnDefinition = "TEXT", length = -1)
+    private String summary;
 }

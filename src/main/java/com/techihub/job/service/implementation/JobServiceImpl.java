@@ -25,7 +25,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public Job create(Job job) {
         log.info("Saving new job: {}",  job.getTitle());
-        job.setImageUrl(setServerImageUrl());
+        job.setLogoUpload(setServerImageUrl());
         return jobRepository.save(job);
     }
     @Override
